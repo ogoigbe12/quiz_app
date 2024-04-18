@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:quiz_app/answer_button.dart';
 import 'package:quiz_app/data/questions.dart';
 
 class QuestionScreen extends StatefulWidget {
-  const QuestionScreen({super.key});
+  const QuestionScreen({
+    super.key,
+    required this.onSelected,
+  });
 
+  final void Function(String answer) onSelected;
   @override
   State<QuestionScreen> createState() => _QuestionScreenState();
 }
@@ -12,7 +17,8 @@ class QuestionScreen extends StatefulWidget {
 class _QuestionScreenState extends State<QuestionScreen> {
   var currentQuestionIndex = 0;
 
-  void answerQuestion() {
+  void answerQuestion(String selectedAnswer) {
+    widget.onSelected(selectedAnswer);
     // currentQuestionIndex = currentQuestionIndex + 1;
     // currentQuestionIndex += 1;
     setState(() {
@@ -34,10 +40,10 @@ class _QuestionScreenState extends State<QuestionScreen> {
           children: [
             Text(
               currentQuestion.text,
-              style: const TextStyle(
-                color: Colors.white,
-                // fontSize: 25,
-                fontWeight: FontWeight.w600,
+              style: GoogleFonts.lato(
+                color: const Color.fromARGB(255, 122, 209, 87),
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
               ),
               textAlign: TextAlign.center,
             ),
@@ -48,7 +54,9 @@ class _QuestionScreenState extends State<QuestionScreen> {
               (answers) {
                 return AnswerButton(
                   answer: answers,
-                  onTap: answerQuestion,
+                  onTap: () {
+                    answerQuestion(answers);
+                  },
                 );
               },
             )

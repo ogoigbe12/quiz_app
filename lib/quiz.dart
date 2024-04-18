@@ -1,23 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:quiz_app/data/questions.dart';
 import 'package:quiz_app/question_screen.dart';
 
 import 'package:quiz_app/quiz_section.dart';
+import 'package:quiz_app/results_screen.dart';
 
-class GradientContainer extends StatefulWidget {
-  const GradientContainer({super.key});
+class Quiz extends StatefulWidget {
+  const Quiz({super.key});
 
   @override
-  State<GradientContainer> createState() => _GradientContainerState();
+  State<Quiz> createState() => _QuizState();
 }
 
-class _GradientContainerState extends State<GradientContainer> {
-  var activeScreen = ('quiz-section');
-
-  // @override
-  // void initState() {
-  //   activeScreen = QuizSection(switchScreen);
-  //   super.initState();
-  // }
+class _QuizState extends State<Quiz> {
+  List<String> selectedAnswer = [];
+  var activeScreen = 'quiz-section';
 
   void switchScreen() {
     setState(() {
@@ -25,16 +22,31 @@ class _GradientContainerState extends State<GradientContainer> {
     });
   }
 
+  void pickAnswer(String answer) {
+    selectedAnswer.add(answer);
+
+    if (selectedAnswer.length == questions.length) {
+      setState(() {
+        selectedAnswer = [];
+        activeScreen = 'results-screen';
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    // final screenWidget = activeScreen == 'start-screen'
-    //     ? QuizSection(switchScreen)
-    //     : const QuestionScreen();
-
     Widget screenWidget = QuizSection(switchScreen);
 
     if (activeScreen == 'question-screen') {
-      screenWidget = const QuestionScreen();
+      screenWidget = QuestionScreen(
+        onSelected: pickAnswer,
+      );
+    }
+
+    if (activeScreen == 'results-screen') {
+      screenWidget = ResultsScreen(
+        chosenAnswers: selectedAnswer,
+      );
     }
 
     return MaterialApp(
